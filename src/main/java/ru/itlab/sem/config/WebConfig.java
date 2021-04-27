@@ -1,29 +1,31 @@
 package ru.itlab.sem.config;
 
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
-
-import java.util.Locale;
 
 @EnableWebMvc
 @Configuration
 @EnableWebSecurity
+@EnableTransactionManagement
 @PropertySource("classpath:application.properties")
-@ComponentScan(basePackages = {"ru.itlab.sem.controllers"})
-public class WebConfig extends WebMvcConfigurerAdapter {
+@EnableJpaRepositories(basePackages = {"ru.itlab.sem.repositories"})
+@ComponentScan(basePackages = {"ru.itlab.sem"})
+@EntityScan(basePackages = {"ru.itlab.sem"})
+//public class WebConfig extends WebMvcConfigurerAdapter {
+public class WebConfig implements WebMvcConfigurer {
     @Bean
     public ViewResolver viewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
