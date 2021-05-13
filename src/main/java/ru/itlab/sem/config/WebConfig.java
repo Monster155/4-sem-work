@@ -1,5 +1,6 @@
 package ru.itlab.sem.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -10,11 +11,15 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
+
+import java.util.Locale;
 
 @EnableWebMvc
 @Configuration
@@ -47,13 +52,18 @@ public class WebConfig implements WebMvcConfigurer {
         return res;
     }
 
-//    @Bean
-//    public LocaleResolver localeResolver() {
-//        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
-//        localeResolver.setCookieName("lang");
-//        localeResolver.setDefaultLocale(Locale.ENGLISH);
-//        return localeResolver;
-//    }
+    @Bean
+    public LocaleResolver localeResolver() {
+        CookieLocaleResolver localeResolver = new CookieLocaleResolver();
+        localeResolver.setCookieName("lang");
+        localeResolver.setDefaultLocale(Locale.US);
+        return localeResolver;
+    }
+
+    @Bean
+    public ModelMapper modelMapper(){
+        return new ModelMapper();
+    }
 
 //    @Override
 //    public void addResourceHandlers(ResourceHandlerRegistry registry) {

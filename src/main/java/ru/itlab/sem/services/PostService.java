@@ -1,0 +1,15 @@
+package ru.itlab.sem.services;
+
+import ru.itlab.sem.models.Post;
+
+import java.util.List;
+
+public interface PostService {
+
+   void addPost(Post post);
+
+   Post getPostById(Long id);
+
+   List<Post> getAll();
+
+}
