@@ -1,0 +1,357 @@
+.content {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    margin: 1.3vw 1.3vw 0;
+}
+
+.background-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+
+    background-color: black;
+}
+
+.menu-main {
+    width: 7.6vw;
+    height: 100%;
+    margin-right: 0.8vw;
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 2.6vw 2.6vw 0 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.posts-container {
+    width: 60%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.post-new {
+    width: 48vw;
+    height: 8vh;
+
+    background: #461E65;
+    border-radius: 1.56vw;
+
+    margin: 6vh 0 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.post-new-profile-photo {
+    width: 2.6vw;
+    height: 2.6vw;
+    border-radius: 2.6vw;
+    background: #FFFFFF;
+    margin: 0 1vw;
+}
+
+.post-new-text {
+    width: 31.5vw;
+    height: 3vh;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+    color: #FFFFFF;
+}
+
+.post-new-add-logo {
+    width: 2vw;
+    height: 2vw;
+
+    background: #FFFFFF;
+
+    margin: 0 0.3vw;
+}
+
+.post-search {
+    width: 48vw;
+    height: 6.5vh;
+    background: #461E65;
+    border-radius: 1.56vw;
+    margin: 3vh 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.post-search-logo {
+    width: 2vw;
+    height: 2vw;
+    background: #FFFFFF;
+    margin: 0 1vw 0 2vw;
+}
+
+.post-search-text {
+    width: 36.5vw;
+    height: 3vh;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+    color: #FFFFFF;
+}
+
+.post-search-voice-logo {
+    width: 2vw;
+    height: 2vw;
+    float: right;
+
+    background: #FFFFFF;
+
+    margin: 0 2vw;
+}
+
+.posts-list{
+
+    width: 48vw;
+}
+
+.profile {
+    width: 40%;
+    height: 100%;
+    background: rgba(70, 30, 101, 0.7);
+    border-radius: 2.6vw 2.6vw 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.profile-info {
+    width: 27vw;
+    height: 20vh;
+    margin: 2vw 6vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info-own {
+    display: flex;
+    flex-direction: row;
+}
+
+.profile-info-own-photo {
+    width: 6.25vw;
+    height: 6.25vw;
+    background-color: #FFFFFF;
+    border-radius: 2.6vw;
+}
+
+.profile-info-own-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-name {
+    margin-left: 1.56vw;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.56vw;
+    line-height: 1.65vw;
+    color: #FFFFFF;
+}
+
+.profile-location {
+    margin-left: 3.65vw;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    color: #FFFFFF;
+}
+
+.profile-info-contacts {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 3vh;
+}
+
+.profile-followers {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-followers-count {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.56vw;
+    line-height: 1.65vw;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.profile-followers-text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.profile-friends {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.profile-friends-count {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.56vw;
+    line-height: 1.65vw;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.profile-friends-text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.profile-follow-btn {
+    width: 9vw;
+    background: #FFFFFF;
+    border-radius: 1.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-follow-btn-text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    text-align: center;
+    color: #000000;
+}
+
+.profile-media {
+    width: 33vw;
+    height: 68.5vh;
+    bottom: 0;
+    margin: 0 1.3vw 0;
+    background-color: #FFFFFF;
+    border-radius: 2.6vw 2.6vw 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-media-menu {
+    display: flex;
+    width: 25vw;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 4.5vh 0;
+}
+
+.profile-media-menu-btn {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+    text-align: center;
+
+    color: #000000;
+}
+
+.profile-media-menu-selector {
+    position: absolute;
+    left: 69.5vw;
+    top: 38.5vh;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+    text-align: center;
+
+    color: #000000;
+}
+
+.profile-media-container {
+    width: 100%;
+    height: inherit;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-media-content {
+    display: flex;
+    flex-direction: row;
+    transition: .5s;
+    position: absolute;
+}
+
+.profile-media-content-element {
+    width: 35vw;
+    display: flex;
+    /*margin: 0 3vw;*/
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-media-photo-small {
+    width: 8vw;
+    height: 8vw;
+
+    margin: 0.5vw;
+}
+
+.profile-media-photo-small-image {
+    width: 8vw;
+    height: 8vw;
+    border-radius: 1vw;
+}
+
+.profile-media-video-small {
+    width: 8vw;
+    height: 8vw;
+
+    margin: 0.5vw;
+}
+
+.profile-media-video-small-image {
+    width: 8vw;
+    height: 8vw;
+    border-radius: 1vw;
+}

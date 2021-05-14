@@ -52,6 +52,7 @@ public class User implements UserDetails {
     private List<User> friends;
 
     @OneToMany(fetch = FetchType.LAZY)
+    @ToString.Exclude
     private List<Post> posts;
 
 //    @ManyToMany()
@@ -86,5 +87,9 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public String getFullName() {
+        return getName() + " " + getSurname();
     }
 }

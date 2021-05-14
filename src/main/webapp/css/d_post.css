@@ -1,0 +1,71 @@
+.post {
+    background: #461E65;
+    border-radius: 2.6vw;
+    padding: 1.5vw;
+    margin: 3vh 0 0;
+}
+
+.post-info {
+    width: 100%;
+    height: 7.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.post-info-photo {
+    width: 4vw;
+    height: 4vw;
+}
+
+.post-info-profile {
+    width: 30vw;
+    height: 6vh;
+}
+
+.post-info-profile-name {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+
+    color: #FFFFFF;
+}
+
+.post-info-date {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.8vw;
+    line-height: 1vw;
+
+    color: #FFFFFF;
+}
+
+.post-content {
+
+    margin: 3vh 0 0;
+
+    padding: 1vw;
+}
+
+.post-content-images {
+}
+
+.post-content-images-element {
+}
+
+.post-content-text {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+
+    color: #FFFFFF;
+}
+
+.post-content-music {
+}

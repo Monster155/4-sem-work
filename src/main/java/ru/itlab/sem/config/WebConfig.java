@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -65,11 +66,11 @@ public class WebConfig implements WebMvcConfigurer {
         return new ModelMapper();
     }
 
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/WEB-INF/**").addResourceLocations("/WEB-INF/");
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/WEB-INF/**").addResourceLocations("/WEB-INF/");
 //        registry.addResourceHandler("/images/**").addResourceLocations("/images/");
-//        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
-//        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
-//    }
+        registry.addResourceHandler("/css/**").addResourceLocations("/css/");
+        registry.addResourceHandler("/js/**").addResourceLocations("/js/");
+    }
 }

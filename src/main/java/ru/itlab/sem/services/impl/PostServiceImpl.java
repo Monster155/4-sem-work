@@ -1,10 +1,11 @@
 package ru.itlab.sem.services.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import ru.itlab.sem.services.PostService;
-import ru.itlab.sem.repositories.PostRepo;
 import ru.itlab.sem.models.Post;
+import ru.itlab.sem.repositories.PostRepo;
+import ru.itlab.sem.services.PostService;
 
 import java.util.List;
 
@@ -27,6 +28,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getAll() {
         return postRepo.findAll();
+    }
+
+    @Override
+    public List<Post> getAllUserPosts(Long userId, Integer limit) {
+        return postRepo.loadAllPosts(userId, PageRequest.of(0, limit));
     }
 
 }

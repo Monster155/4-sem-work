@@ -12,4 +12,5 @@ public interface PostService {
 
    List<Post> getAll();
 
+   List<Post> getAllUserPosts(Long userId, Integer limit);
 }
