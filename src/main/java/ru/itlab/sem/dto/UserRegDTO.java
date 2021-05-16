@@ -13,14 +13,6 @@ import javax.validation.constraints.Size;
 @EqualsAndHashCode
 @ToString
 public class UserRegDTO {
-
-    private Long id;
-
-    //    @NotEmpty(message = "Name can not be empty")
-//    @Size(max = 30, message = "You can enter max 30 letters. Use your shortest name")
-    private String name;
-    private String surname;
-
     @NotEmpty(message = "Nickname can not be empty")
     @Size(max = 30, message = "You can enter max 30 letters. Use your shortest nickname")
     private String nickname;

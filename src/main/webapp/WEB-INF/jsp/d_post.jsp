@@ -6,9 +6,10 @@
 <c:forEach items="${posts}" var="post">
     <div class="post">
         <div class="post-info">
+                <%--<div class="post-info-photo" style="background: url(${post.owner.photo.photo})">--%>
             <div class="post-info-photo">
-                <c:set var="photo" value="${post.owner.photo}"/>
-                    <%--                <img src="${s:mvcUrl("DC#loadImage").arg(0, photo).build()}" class="post-info-photo-element">--%>
+                    <%--<c:set var="photo" value="${post.owner.photo.photo}"/>--%>
+                <img src="data: image/png; base64, ${post.owner.photo.photo}" class="post-info-photo-element">
             </div>
             <div class="post-info-profile">
                 <div class="post-info-profile-name">${post.owner.name}</div>

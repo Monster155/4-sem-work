@@ -4,9 +4,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Something went wrong</title>
 </head>
 <body>
-
+any
 </body>
 </html>

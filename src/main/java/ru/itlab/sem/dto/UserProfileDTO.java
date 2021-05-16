@@ -1,28 +1,25 @@
 package ru.itlab.sem.dto;
 
+import lombok.*;
+import ru.itlab.sem.models.Image;
+
+import java.util.List;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@EqualsAndHashCode
+@ToString
 public class UserProfileDTO {
-    /*private int id;
-    private String firstName;
-    private String lastName;
-    private String username;
-    private User.Role role;
-    private Properties properties;
-
-    public static UserDto from (User user){
-        UserDto result = UserDto.builder()
-                .id(user.getId())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
-                .role(user.getRole())
-                .build();
-
-        if(user.getProperties() != null)
-            result.setProperties(user.getProperties());
-
-        return result;
-    }
-    public static List<UserDto> from (List<User> users){
-        return users.stream().map(UserDto::from).collect(Collectors.toList());
-    }*/
+    private long id;
+    private ImageDTO photo;
+    private String name;
+    private String surname;
+    private String fullname;
+    private String nickname;
+    private String location;
+    private List<ImageDTO> images;
+    private int followersCount;
+    private int friendsCount;
 }

@@ -9,24 +9,18 @@ import ru.itlab.sem.services.UserService;
 
 @Slf4j
 @Component
-public class NicknameConverter implements Converter<String, Long> {
+public class NicknameToUserConverter implements Converter<String, User> {
 
     @Autowired
     private UserService userService;
 
     @Override
-    public Long convert(String s) {
+    public User convert(String s) {
         try {
-            return Long.parseLong(s);
+            return userService.findUserById(Long.parseLong(s));
         } catch (NumberFormatException e) {
             log.info("Can't convert '" + s + "' to Long, try to find it from Database");
-
-            User user = userService.findUserByNickname(s);
-            if (user == null) {
-                log.info("User with nickname '" + s + "' not found, returning null...");
-                return null;
-            }
-            return user.getId();
+            return userService.findUserByNickname(s);
         }
     }
 }

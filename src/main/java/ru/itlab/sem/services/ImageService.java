@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface ImageService {
 
-   void addImage(Image image);
+    Image addImage(Image image);
 
-   Image getImageById(Long id);
+    Image findImageById(Long id);
 
-   List<Image> getAll();
+    List<Image> getAll();
 
+    Image findImageByName(String name);
 }

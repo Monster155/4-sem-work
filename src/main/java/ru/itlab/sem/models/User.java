@@ -47,6 +47,14 @@ public class User implements UserDetails {
 //    @Size(min = 8, max = 30, message = "Password must contain from 8 to 30 characters")
     private String password;
 
+    //    @NotEmpty(message = "Location can not be empty")
+//    @Size(min = 2, max = 100, message = "Location must contain from 2 characters")
+    private String location;
+
+    @OneToMany(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private List<User> followers;
+
     @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private List<User> friends;
@@ -54,6 +62,9 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
     private List<Post> posts;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Image> images;
 
 //    @ManyToMany()
 //    private Set<Role> roles;

@@ -62,6 +62,13 @@
     margin: 0 1vw;
 }
 
+.post-new-profile-photo-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
 .post-new-text {
     width: 31.5vw;
     height: 3vh;
@@ -76,18 +83,29 @@
 .post-new-add-logo {
     width: 2vw;
     height: 2vw;
+    margin: 0 0.3vw;
 
+    border-radius: 0.5vw;
     background: #FFFFFF;
 
-    margin: 0 0.3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-new-add-logo-image {
+    width: 1.5vw;
+    height: 1.5vw;
 }
 
 .post-search {
     width: 48vw;
     height: 6.5vh;
+
     background: #461E65;
     border-radius: 1.56vw;
     margin: 3vh 0 0;
+
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -97,7 +115,16 @@
     width: 2vw;
     height: 2vw;
     background: #FFFFFF;
+    border-radius: 0.5vw;
     margin: 0 1vw 0 2vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.post-search-logo-image {
+    width: 1.5vw;
+    height: 1.5vw;
 }
 
 .post-search-text {
@@ -114,15 +141,20 @@
 .post-search-voice-logo {
     width: 2vw;
     height: 2vw;
-    float: right;
-
-    background: #FFFFFF;
-
     margin: 0 2vw;
+    border-radius: 0.5vw;
+    background: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.posts-list{
+.post-search-voice-logo-image {
+    width: 1.5vw;
+    height: 1.5vw;
+}
 
+.posts-list {
     width: 48vw;
 }
 
@@ -155,6 +187,13 @@
     height: 6.25vw;
     background-color: #FFFFFF;
     border-radius: 2.6vw;
+}
+
+.profile-info-own-photo-element {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
 }
 
 .profile-info-own-text {

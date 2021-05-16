@@ -4,12 +4,12 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <html>
 <head>
-    <title><%--${profile.name}--%></title>
+    <title>${profile.fullname}</title>
     <link href="/css/profile.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <%--<img src="<c:url value='/images/background.png'/>" class="background-image" id="1">--%>
-<img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}" class="background-image">
+<img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}" class="background-image">
 <div class="content" id="content">
     <div class="menu-main">
         <jsp:include page="d_menu.jsp"/>
@@ -17,17 +17,38 @@
     <div class="main" id="main">
         <div class="posts-container">
             <div class="post-new">
-                <div class="post-new-profile-photo"></div>
+                <div class="post-new-profile-photo">
+                    <img src="data: image/png; base64, ${profile.photo.photo}"
+                         class="post-new-profile-photo-element">
+                </div>
                 <div class="post-new-text">What's new...</div>
-                <div class="post-new-add-photo post-new-add-logo"></div>
-                <div class="post-new-add-video post-new-add-logo"></div>
-                <div class="post-new-add-music post-new-add-logo"></div>
-                <div class="post-new-add-wyswig post-new-add-logo"></div>
+                <div class="post-new-add-photo post-new-add-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
+                         class="post-new-add-logo-image">
+                </div>
+                <div class="post-new-add-video post-new-add-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
+                         class="post-new-add-logo-image">
+                </div>
+                <div class="post-new-add-music post-new-add-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
+                         class="post-new-add-logo-image">
+                </div>
+                <div class="post-new-add-wyswig post-new-add-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
+                         class="post-new-add-logo-image">
+                </div>
             </div>
             <div class="post-search">
-                <div class="post-search-logo"></div>
+                <div class="post-search-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "search_icon").build()}"
+                         class="post-search-logo-image">
+                </div>
                 <div class="post-search-text">Search...</div>
-                <div class="post-search-voice-logo"></div>
+                <div class="post-search-voice-logo">
+                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "voice_icon").build()}"
+                         class="post-search-voice-logo-image">
+                </div>
             </div>
             <%--posts--%>
             <div class="posts-list" id="posts-list"></div>
@@ -35,19 +56,22 @@
         <div class="profile">
             <div class="profile-info">
                 <div class="profile-info-own">
-                    <div class="profile-info-own-photo"></div>
+                    <div class="profile-info-own-photo">
+                        <img src="data: image/png; base64, ${profile.photo.photo}"
+                             class="profile-info-own-photo-element">
+                    </div>
                     <div class="profile-info-own-text">
-                        <div class="profile-name">Damir Davletshin</div>
-                        <div class="profile-location">Kazan, Russia</div>
+                        <div class="profile-name">${profile.fullname}</div>
+                        <div class="profile-location">${profile.location}</div>
                     </div>
                 </div>
                 <div class="profile-info-contacts">
                     <div class="profile-followers">
-                        <div class="profile-followers-count">17K</div>
+                        <div class="profile-followers-count">${profile.followersCount}</div>
                         <div class="profile-followers-text">Followers</div>
                     </div>
                     <div class="profile-friends">
-                        <div class="profile-friends-count">337</div>
+                        <div class="profile-friends-count">${profile.friendsCount}</div>
                         <div class="profile-friends-text">Friends</div>
                     </div>
                     <div class="profile-follow-btn">
@@ -67,66 +91,24 @@
                 <div class="profile-media-container" id="profile-media-container">
                     <div class="profile-media-content" id="profile-media-content">
                         <div class="profile-media-photo profile-media-content-element" id="profile-media-photo">
+                            <c:set var="numCols" value="3"/>
+                            <c:set var="colsCount" value="0"/>
                             <table>
                                 <tr>
+                                    <c:forEach items="${profile.images}" var="img" varStatus="status">
+                                    <c:if test="${colsCount lt numCols}">
                                     <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
+                                        <img src="data: image/png; base64, ${img.photo}"
+                                             class="profile-media-photo-small-image">
                                     </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
+                                    <c:set var="colsCount" value="${colsCount + 1}"/>
+                                    <c:if test="${colsCount ge numCols}">
+                                    <c:set var="colsCount" value="0"/>
                                 </tr>
                                 <tr>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-photo-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-photo-small-image">
-                                        </div>
-                                    </td>
+                                    </c:if>
+                                    </c:if>
+                                    </c:forEach>
                                 </tr>
                             </table>
                         </div>
@@ -135,39 +117,19 @@
                                 <tr>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-video-small-image">
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-video-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
-                                                 class="profile-media-video-small-image">
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
@@ -175,19 +137,39 @@
                                 <tr>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
                                     <td>
                                         <div class="profile-media-video-small">
-                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background.png").build()}"
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
+                                                 class="profile-media-video-small-image">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="profile-media-video-small">
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
+                                                 class="profile-media-video-small-image">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="profile-media-video-small">
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
+                                                 class="profile-media-video-small-image">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="profile-media-video-small">
+                                            <img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}"
                                                  class="profile-media-video-small-image">
                                         </div>
                                     </td>
@@ -213,7 +195,7 @@
 
         $.ajax({
             <%--url: "${s:mvcUrl("DC#loadPost").arg(0, 1).build()}=1",--%>
-            url: "${s:mvcUrl("DC#loadAllPosts").arg(0, 'dajjsand').arg(1, 2).build()}",
+            url: "${s:mvcUrl("DC#loadAllPosts").arg(0, 'dajjsand').arg(1, 4).build()}",
             method: 'GET',
             cache: false,
             type: "text/json",

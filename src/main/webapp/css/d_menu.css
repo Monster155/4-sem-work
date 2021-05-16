@@ -34,11 +34,21 @@ body {
 .logo {
     width: 5.2vw;
     height: 5.2vw;
+
     margin-top: 7vh;
     margin-bottom: 8.3vh;
+
     border-radius: 1vw;
     background: #FFFFFF;
-    /*background: url();*/
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-image {
+    width: 3vw;
+    height: 3vw;
 }
 
 .menu-buttons {
@@ -50,7 +60,17 @@ body {
 .menu-btn {
     width: 4vw;
     height: 4vw;
+
     margin-bottom: 3.7vh;
     background: #FFFFFF;
     border-radius: 0.52vw;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-btn-image {
+    width: 3vw;
+    height: 3vw;
 }

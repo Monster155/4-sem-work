@@ -1,34 +1,44 @@
 package ru.itlab.sem.controllers;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import ru.itlab.sem.dto.UserRegConDTO;
 import ru.itlab.sem.dto.UserRegDTO;
+import ru.itlab.sem.models.Image;
 import ru.itlab.sem.models.User;
+import ru.itlab.sem.services.ImageService;
 import ru.itlab.sem.services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/sign")
+@Slf4j
 public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private ImageService imageService;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -40,6 +50,8 @@ public class AuthController {
     private HttpServletRequest request;
     @Autowired
     private HttpServletResponse response;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
     private MessageSourceAccessor msa;
 
@@ -59,15 +71,17 @@ public class AuthController {
 
     @RequestMapping("/in/suc")
     public String loginPost(@ModelAttribute User user) {
+        user = userService.findUserByEmail(user.getEmail());
         System.out.println(user);
-        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute("userModel", user);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
     }
 
     @GetMapping("/in/failed")
     public String loginFailed(RedirectAttributes redirectAttributes) {
+        System.out.println("Login failed");
         redirectAttributes.addFlashAttribute("message", msa.getMessage("login.notfound"));
-        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#login").build();
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
     }
 
     @GetMapping("/up")
@@ -87,7 +101,7 @@ public class AuthController {
             System.out.println("failed");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userUp", result);
             redirectAttributes.addFlashAttribute("userUp", userRegDTO);
-            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#login").build();
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
         }
         System.out.println("passed");
 
@@ -98,35 +112,76 @@ public class AuthController {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 //            user.setRoles(Collections.singleton(new Role(Role.Names.USER))); TODO
 
-            userService.addUser(user);
-
-            request.getSession().setAttribute("user", user);
-            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
+            request.getSession().setAttribute("userModel", user);
+            //TODO remove when logout
+            redirectAttributes.addFlashAttribute("user", user);
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#regC").build();
         }
 
         redirectAttributes.addFlashAttribute("message", msa.getMessage("reg.failed"));
-        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#login").build();
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
     }
 
     @GetMapping("/up_c")
     public String regC(ModelMap map) {
-        map.put("user", new User());
-        if (request.getSession().getAttribute("user") == null)
+        if (request.getSession().getAttribute("userModel") == null) {
             return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#index").build();
-        else {
-            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
+        } else {
+            map.put("user", new User());
+            return "reg_c";
         }
     }
 
     @PostMapping("/up_c")
-    public String regCPost(@ModelAttribute("user") UserRegDTO userRegDTO,
+    public String regCPost(RedirectAttributes redirectAttributes,
+                           @RequestParam("photo") MultipartFile multipartFile,
+                           @Valid @ModelAttribute("user") UserRegConDTO userRegConDTO,
+                           BindingResult result,
                            ModelMap map) {
-        System.out.println(userRegDTO);
-//        User user = (User) request.getSession().getAttribute("user");
-//        modelMapper.map(userRegDTO, user);
-//        if (userService.addUser(user))
-//            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
-//        else
-        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#index").build();
+        if (result.hasErrors()) {
+            System.out.println("failed");
+            return "reg_c";
+        }
+
+        byte[] img = null;
+        try (InputStream fileContent = multipartFile.getInputStream()) {
+            img = IOUtils.toByteArray(fileContent);
+        } catch (IOException e) {
+            log.info(e.getMessage());
+        }
+        Image image = null;
+        if (img != null)
+            if (img.length > 0)
+                image = imageService.addImage(new Image(0, null, img));
+        System.out.println(image);
+
+        User user = (User) request.getSession().getAttribute("userModel");
+        System.out.println(user);
+        System.out.println(userRegConDTO);
+
+        user.setPhoto(image);
+        user.setImages(new ArrayList<>());
+        user.getImages().add(image);
+        modelMapper.map(userRegConDTO, user);
+        System.out.println(user);
+
+        user = userService.addUser(user);
+        request.getSession().setAttribute("userModel", user);
+
+        redirectAttributes.addFlashAttribute("message", "Successfully registered. Now you can login!");
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
+
+//        redirectAttributes.addFlashAttribute("user", modelMapper.map(user, UserLoginDTO.class));
+//        return "forward:" + "/sign/in";
+
+        // autologin
+//        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+//        token.setDetails(new WebAuthenticationDetails(request));
+////        Authentication authenticatedUser = authenticationManager.authenticate(token);
+////        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
+//        SecurityContextHolder.getContext().setAuthentication(token);
+//
+//        redirectAttributes.addFlashAttribute("user", user);
+//        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#loginPost").build();
     }
 }
