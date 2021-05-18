@@ -33,7 +33,7 @@
     <f:errors path="email"/>
     <br>
     <f:label path="nickname"><s:message code="nickname"/></f:label>
-    <f:input path="nickname" type="text"/>
+    <f:input path="nickname" type="text" required="required"/>
     <f:errors path="nickname"/>
     <br>
     <f:label path="password"><s:message code="password"/></f:label>
