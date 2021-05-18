@@ -21,7 +21,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 import ru.itlab.sem.dto.ImageDTO;
-import ru.itlab.sem.dto.UserProfileDTO;
+import ru.itlab.sem.dto.userDTO.UserProfileDTO;
 import ru.itlab.sem.models.Image;
 import ru.itlab.sem.models.User;
 

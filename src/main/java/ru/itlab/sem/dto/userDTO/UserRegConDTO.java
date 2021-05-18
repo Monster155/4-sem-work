@@ -1,4 +1,4 @@
-package ru.itlab.sem.dto;
+package ru.itlab.sem.dto.userDTO;
 
 import lombok.*;
 

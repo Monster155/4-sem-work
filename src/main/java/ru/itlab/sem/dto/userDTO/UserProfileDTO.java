@@ -1,6 +1,7 @@
-package ru.itlab.sem.dto;
+package ru.itlab.sem.dto.userDTO;
 
 import lombok.*;
+import ru.itlab.sem.dto.ImageDTO;
 import ru.itlab.sem.models.Image;
 
 import java.util.List;

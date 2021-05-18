@@ -21,23 +21,40 @@
                     <img src="data: image/png; base64, ${profile.photo.photo}"
                          class="post-new-profile-photo-element">
                 </div>
-                <div class="post-new-text">What's new...</div>
-                <div class="post-new-add-photo post-new-add-logo">
-                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
-                         class="post-new-add-logo-image">
-                </div>
-                <div class="post-new-add-video post-new-add-logo">
-                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
-                         class="post-new-add-logo-image">
-                </div>
-                <div class="post-new-add-music post-new-add-logo">
-                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
-                         class="post-new-add-logo-image">
-                </div>
-                <div class="post-new-add-wyswig post-new-add-logo">
-                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
-                         class="post-new-add-logo-image">
-                </div>
+                <f:form class="post-form hor" method="post" enctype="multipart/form-data"
+                        action='${s:mvcUrl("PC#addPost").build()}' modelAttribute="post">
+                    <label class="post-new-text">
+                        <f:input path="text" class="post-new-text-input" placeholder="What's new..."/>
+                    </label>
+                    <div class="ver" style="align-items: center;">
+                        <div class="hor">
+                            <div>
+                                <button class="post-new-add-photo post-new-add-logo" id="post-new-add-photo"
+                                        type="button">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
+                                         class="post-new-add-logo-image" id="post-new-add-photos-image">
+                                </button>
+                                <input id="images" name="images" type="file" accept="image/png, image/jpeg"
+                                       multiple capture hidden/>
+                            </div>
+                            <div class="post-new-add-video post-new-add-logo">
+                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
+                                     class="post-new-add-logo-image">
+                            </div>
+                            <div class="post-new-add-music post-new-add-logo">
+                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
+                                     class="post-new-add-logo-image">
+                            </div>
+                            <div class="post-new-add-wyswig post-new-add-logo">
+                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
+                                     class="post-new-add-logo-image">
+                            </div>
+                        </div>
+                        <button class="post-new-add-btn" id="post-new-add-btn" type="submit" hidden>
+                            Post
+                        </button>
+                    </div>
+                </f:form>
             </div>
             <div class="post-search">
                 <div class="post-search-logo">
@@ -185,7 +202,40 @@
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<%--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.js"></script>--%>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+    $("#post-new-add-photo").click(function () {
+        $("#images").click();
+    });
+
+    $("#images").change(function (ev) {
+        if (this.files) {
+            $("#post-new-add-photos-image").prop('disabled', true);
+            $("#post-new-add-photo").html(this.files.length);
+        } else {
+            $("#post-new-add-photos-image").prop('disabled', false);
+            $("#post-new-add-photo").html();
+        }
+    });
+
+    $('#images').change(function () {
+        if (this.files.length > 10)
+            alert('Too many files')
+    });
+
+    // Prevent submission if limit is exceeded.
+    $('form').submit(function () {
+        if (this.files.length > 10)
+            return false;
+    });
+
+    $("#text").focus(function () {
+        $("#post-new-add-btn").show();
+        $(".post-new").css({height: '12vh'});
+    });
+</script>
 <script>
 
     $(document).ready(function () {
@@ -194,8 +244,7 @@
         $("#profile-media-content").css({left: l2});
 
         $.ajax({
-            <%--url: "${s:mvcUrl("DC#loadPost").arg(0, 1).build()}=1",--%>
-            url: "${s:mvcUrl("DC#loadAllPosts").arg(0, 'dajjsand').arg(1, 4).build()}",
+            url: "${s:mvcUrl("PC#loadAllPosts").arg(0, profile.nickname).arg(1, '4').build()}",
             method: 'GET',
             cache: false,
             type: "text/json",

@@ -9,7 +9,7 @@
     </a>
     <div class="menu-buttons">
 
-        <a class="menu-btn" href="${s:mvcUrl("DC#ownProfile").build()}">
+        <a class="menu-btn" href="${s:mvcUrl("DC#getOwnProfile").build()}">
             <img src="${s:mvcUrl("DC#loadImage").arg(0, "profile_icon").build()}" class="menu-btn-image">
         </a>
         <a class="menu-btn" href="${s:mvcUrl("CEC#notReady").build()}">

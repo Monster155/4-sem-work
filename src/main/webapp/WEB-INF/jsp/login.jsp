@@ -42,5 +42,7 @@
     <br>
     <button class="btn btn-lg btn-primary btn-block" type="submit"><s:message code="login.submit-button"/></button>
 </f:form>
+<br>
+<a href="${oauth}">OAuth</a>
 </body>
 </html>

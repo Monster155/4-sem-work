@@ -1,7 +1,6 @@
 package ru.itlab.sem.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -16,8 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.itlab.sem.dto.UserRegConDTO;
-import ru.itlab.sem.dto.UserRegDTO;
+import ru.itlab.sem.APIs.vk.VKontakteAPIController;
+import ru.itlab.sem.dto.userDTO.UserRegConDTO;
+import ru.itlab.sem.dto.userDTO.UserRegDTO;
 import ru.itlab.sem.models.Image;
 import ru.itlab.sem.models.User;
 import ru.itlab.sem.services.ImageService;
@@ -26,8 +26,6 @@ import ru.itlab.sem.services.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 @Controller
@@ -62,6 +60,7 @@ public class AuthController {
 
     @GetMapping
     public String join(ModelMap map) {
+        map.put("oauth", VKontakteAPIController.getURL4Code());
         if (!map.containsAttribute("userIn"))
             map.put("userIn", new User());
         if (!map.containsAttribute("userUp"))
@@ -109,6 +108,7 @@ public class AuthController {
             User user = modelMapper.map(userRegDTO, User.class);
             System.out.println(user);
 
+            user.setNickname(user.getNickname().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
 //            user.setRoles(Collections.singleton(new Role(Role.Names.USER))); TODO
 
@@ -143,16 +143,7 @@ public class AuthController {
             return "reg_c";
         }
 
-        byte[] img = null;
-        try (InputStream fileContent = multipartFile.getInputStream()) {
-            img = IOUtils.toByteArray(fileContent);
-        } catch (IOException e) {
-            log.info(e.getMessage());
-        }
-        Image image = null;
-        if (img != null)
-            if (img.length > 0)
-                image = imageService.addImage(new Image(0, null, img));
+        Image image = imageService.addImage(multipartFile, null);
         System.out.println(image);
 
         User user = (User) request.getSession().getAttribute("userModel");
@@ -183,5 +174,11 @@ public class AuthController {
 //
 //        redirectAttributes.addFlashAttribute("user", user);
 //        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#loginPost").build();
+    }
+
+    @RequestMapping("/oauth")
+    @ResponseBody
+    public String oAuth(@RequestParam("code") String code) {
+        return code;
     }
 }

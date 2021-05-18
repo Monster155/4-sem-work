@@ -1,22 +1,38 @@
 package ru.itlab.sem.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import ru.itlab.sem.models.Image;
 import ru.itlab.sem.repositories.ImageRepo;
 import ru.itlab.sem.services.ImageService;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ImageServiceImpl implements ImageService {
 
     @Autowired
     private ImageRepo imageRepo;
 
     @Override
-    public Image addImage(Image image) {
-        return imageRepo.saveAndFlush(image);
+    public Image addImage(MultipartFile multipartFile, String name) {
+        byte[] img = null;
+        try (InputStream fileContent = multipartFile.getInputStream()) {
+            img = IOUtils.toByteArray(fileContent);
+        } catch (IOException e) {
+            log.info(e.getMessage());
+        }
+        if (img == null)
+            return null;
+        if (img.length <= 0)
+            return null;
+        return imageRepo.saveAndFlush(new Image(0, name, img));
     }
 
     @Override

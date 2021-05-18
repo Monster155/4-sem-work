@@ -64,18 +64,23 @@
 }
 
 .post-content-images {
+    overflow: auto;
+    white-space: nowrap;
 }
 
 .post-content-images-element {
+    width: 10vw;
+    padding: 0 1vw;
 }
 
 .post-content-text {
+    padding: 2vw 0 0 0;
+
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 1.25vw;
     line-height: 1.5vw;
-
     color: #FFFFFF;
 }
 

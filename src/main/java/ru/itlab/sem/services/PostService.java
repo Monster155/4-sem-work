@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PostService {
 
-   void addPost(Post post);
+   Post addPost(Post post);
 
    Post getPostById(Long id);
 

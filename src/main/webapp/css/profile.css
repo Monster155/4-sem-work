@@ -69,9 +69,32 @@
     border-radius: inherit;
 }
 
+.post-form {
+    align-items: center;
+}
+
 .post-new-text {
     width: 31.5vw;
     height: 3vh;
+}
+
+.post-new-text-input {
+    width: 100%;
+    height: 100%;
+
+    outline: none;
+    border: 0;
+    background: none;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+    line-height: 1.5vw;
+    color: #FFFFFF;
+}
+
+.post-new-text-input::placeholder {
     font-family: Roboto;
     font-style: normal;
     font-weight: normal;
@@ -96,6 +119,23 @@
 .post-new-add-logo-image {
     width: 1.5vw;
     height: 1.5vw;
+}
+
+.post-new-add-btn {
+    width: 80%;
+    height: 4vh;
+
+    margin: 1vh 0 0 0;
+    background: #FFFFFF;
+    border-radius: 1.5vw;
+
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1vw;
+    line-height: 1.5vw;
+    text-align: center;
+    color: #000000;
 }
 
 .post-search {
