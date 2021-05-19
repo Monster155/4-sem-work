@@ -19,6 +19,7 @@ import ru.itlab.sem.dto.postDTO.User4PostDTO;
 import ru.itlab.sem.dto.userDTO.UserProfileDTO;
 import ru.itlab.sem.models.Image;
 import ru.itlab.sem.models.User;
+import ru.itlab.sem.services.RelationshipService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +31,8 @@ import java.util.Locale;
 @Controller
 @Slf4j
 public class DefaultController {
-
+    @Autowired
+    private RelationshipService relService;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -55,6 +57,25 @@ public class DefaultController {
 
     @GetMapping("/")
     public String index() {
+        System.out.println(relService.find((long) 1, (long) 3));
+        System.out.println(relService.find((long) 3, (long) 1));
+
+        System.out.println(relService.add((long) 1, (long) 3));
+
+        System.out.println(relService.find((long) 1, (long) 3));
+        System.out.println(relService.find((long) 3, (long) 1));
+
+        System.out.println(relService.add((long) 3, (long) 1));
+
+        System.out.println(relService.find((long) 1, (long) 3));
+        System.out.println(relService.find((long) 3, (long) 1));
+
+        System.out.println(relService.remove((long) 1, (long) 3));
+
+        System.out.println(relService.find((long) 1, (long) 3));
+        System.out.println(relService.find((long) 3, (long) 1));
+//        relService.((long) 1, (long) 3);
+
         // if authorized - redirect messages
         // else - redirect login (user login everytime, but register only once)
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
@@ -79,10 +100,30 @@ public class DefaultController {
         UserProfileDTO profileDTO = modelMapper.map(user, UserProfileDTO.class);
         //add to Model Map
         map.put("profile", profileDTO);
+        // post DTO - for creating new post
         PostDTO postDTO = PostDTO.builder()
                 .owner(modelMapper.map(user, User4PostDTO.class))
                 .build();
         map.put("post", postDTO);
+        //show
+        return "profile";
+    }
+
+    @GetMapping("/{profile}/follow")
+    @ResponseBody
+    public String profileFollow(RedirectAttributes redirectAttributes,
+                                @PathVariable("profile") String profile,
+                                ModelMap map) {
+        //get profile from DB
+        System.out.println(profile);
+        User followedUser = nicknameToUserConverter.convert(profile);
+        if (followedUser == null) {
+            throw new NullPointerException("User's profile not found");
+        }
+        System.out.println(followedUser);
+        //add to Model Map
+        User user = (User) request.getSession().getAttribute("userModel");
+
         //show
         return "profile";
     }

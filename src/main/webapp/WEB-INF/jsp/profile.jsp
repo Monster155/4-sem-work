@@ -16,46 +16,48 @@
     </div>
     <div class="main" id="main">
         <div class="posts-container">
-            <div class="post-new">
-                <div class="post-new-profile-photo">
-                    <img src="data: image/png; base64, ${profile.photo.photo}"
-                         class="post-new-profile-photo-element">
-                </div>
-                <f:form class="post-form hor" method="post" enctype="multipart/form-data"
-                        action='${s:mvcUrl("PC#addPost").build()}' modelAttribute="post">
-                    <label class="post-new-text">
-                        <f:input path="text" class="post-new-text-input" placeholder="What's new..."/>
-                    </label>
-                    <div class="ver" style="align-items: center;">
-                        <div class="hor">
-                            <div>
-                                <button class="post-new-add-photo post-new-add-logo" id="post-new-add-photo"
-                                        type="button">
-                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
-                                         class="post-new-add-logo-image" id="post-new-add-photos-image">
-                                </button>
-                                <input id="images" name="images" type="file" accept="image/png, image/jpeg"
-                                       multiple capture hidden/>
-                            </div>
-                            <div class="post-new-add-video post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                            <div class="post-new-add-music post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                            <div class="post-new-add-wyswig post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                        </div>
-                        <button class="post-new-add-btn" id="post-new-add-btn" type="submit" hidden>
-                            Post
-                        </button>
+            <c:if test="${profile.id == sessionScope.userModel.id}">
+                <div class="post-new">
+                    <div class="post-new-profile-photo">
+                        <img src="data: image/png; base64, ${profile.photo.photo}"
+                             class="post-new-profile-photo-element">
                     </div>
-                </f:form>
-            </div>
+                    <f:form class="post-form hor" method="post" enctype="multipart/form-data"
+                            action='${s:mvcUrl("PC#addPost").build()}' modelAttribute="post">
+                        <label class="post-new-text">
+                            <f:input path="text" class="post-new-text-input" placeholder="What's new..."/>
+                        </label>
+                        <div class="ver" style="align-items: center;">
+                            <div class="hor">
+                                <div>
+                                    <button class="post-new-add-photo post-new-add-logo" id="post-new-add-photo"
+                                            type="button">
+                                        <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
+                                             class="post-new-add-logo-image" id="post-new-add-photos-image">
+                                    </button>
+                                    <input id="images" name="images" type="file" accept="image/png, image/jpeg"
+                                           multiple capture hidden/>
+                                </div>
+                                <div class="post-new-add-video post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                                <div class="post-new-add-music post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                                <div class="post-new-add-wyswig post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                            </div>
+                            <button class="post-new-add-btn" id="post-new-add-btn" type="submit" hidden>
+                                Post
+                            </button>
+                        </div>
+                    </f:form>
+                </div>
+            </c:if>
             <div class="post-search">
                 <div class="post-search-logo">
                     <img src="${s:mvcUrl("DC#loadImage").arg(0, "search_icon").build()}"
@@ -91,11 +93,11 @@
                         <div class="profile-friends-count">${profile.friendsCount}</div>
                         <div class="profile-friends-text">Friends</div>
                     </div>
-                    <div class="profile-follow-btn">
+                    <button class="profile-follow-btn" onclick="follow(this)">
                         <div class="profile-follow-btn-text">
                             Follow
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
             <div class="profile-media">
@@ -235,6 +237,33 @@
         $("#post-new-add-btn").show();
         $(".post-new").css({height: '12vh'});
     });
+</script>
+<script>
+    function follow(btn) {
+        $.ajax({
+            url: "${s:mvcUrl("PC#loadAllPosts").arg(0, profile.nickname).arg(1, '4').build()}",
+            method: 'GET',
+            cache: false,
+            type: "text/json",
+
+            success: function (res) {
+
+                $(btn).prop('disabled', false);
+                $(btn).css({background: "#FFFFFF"});
+            },
+            error: function (res) {
+                $(btn).prop('disabled', false);
+                $(btn).css({background: "#FFFFFF"});
+            }
+        })
+            .always(function () {
+                $(btn).prop('disabled', true);
+                $(btn).css({background: "#C4C4C4"});
+            })
+            .then(function () {
+
+            });
+    }
 </script>
 <script>
 

@@ -1,5 +1,6 @@
 package ru.itlab.sem.controllers;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import ru.itlab.sem.APIs.vk.VKontakteAPIController;
+import ru.itlab.sem.APIs.vk.AccessToken;
+import ru.itlab.sem.APIs.vk.OAuthUser;
+import ru.itlab.sem.APIs.vk.VKontakteAPI;
 import ru.itlab.sem.dto.userDTO.UserRegConDTO;
 import ru.itlab.sem.dto.userDTO.UserRegDTO;
 import ru.itlab.sem.models.Image;
@@ -26,6 +29,12 @@ import ru.itlab.sem.services.UserService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @Controller
@@ -41,6 +50,8 @@ public class AuthController {
     private ModelMapper modelMapper;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private Gson g;
 
     @Autowired
     private LocaleResolver localeResolver;
@@ -60,7 +71,7 @@ public class AuthController {
 
     @GetMapping
     public String join(ModelMap map) {
-        map.put("oauth", VKontakteAPIController.getURL4Code());
+        map.put("oauth", VKontakteAPI.getURL4Code());
         if (!map.containsAttribute("userIn"))
             map.put("userIn", new User());
         if (!map.containsAttribute("userUp"))
@@ -177,8 +188,81 @@ public class AuthController {
     }
 
     @RequestMapping("/oauth")
-    @ResponseBody
-    public String oAuth(@RequestParam("code") String code) {
-        return code;
+    public String oAuthGet(RedirectAttributes redirectAttributes,
+                           @RequestParam("code") String code) {
+        request.getSession().setAttribute("VKCode", code);
+        System.out.println(code);
+        StringBuilder sb = new StringBuilder();
+
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(VKontakteAPI.getURL4AccessToken(code)).openConnection();
+            connection.setRequestMethod("GET");
+            InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            int charByte;
+            while ((charByte = bufferedReader.read()) != -1) {
+                sb.append((char) charByte);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(sb.toString());
+
+        AccessToken accessToken = g.fromJson(sb.toString(), AccessToken.class);
+        request.getSession().setAttribute("accessToken", accessToken);
+
+        if (userService.findUserByEmail(accessToken.email) != null) {
+            redirectAttributes.addFlashAttribute("message", "You already have account! Use login form to sign in!");
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
+        }
+
+        sb = new StringBuilder();
+        try {
+            HttpURLConnection connection = (HttpURLConnection) new URL(VKontakteAPI.getURL4getProfileAPI(accessToken.access_token)).openConnection();
+            connection.setRequestMethod("GET");
+            InputStreamReader inputStreamReader = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+            int charByte;
+            while ((charByte = bufferedReader.read()) != -1) {
+                sb.append((char) charByte);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(sb.toString());
+
+        int z = "{\"response\":[".length();
+        OAuthUser oAuthUser = g.fromJson(sb.substring(z, sb.length() - 2), OAuthUser.class);
+//        oAuthUser.email = accessToken.email;
+
+        System.out.println(oAuthUser);
+
+        // register user
+        Image image = imageService.addImage(oAuthUser.getPhoto_big(), null);
+        System.out.println(image);
+
+        User user = User.builder()
+                .photo(image)
+                .name(oAuthUser.getFirst_name())
+                .surname(oAuthUser.getLast_name())
+                .nickname(oAuthUser.getScreen_name())
+                .email(accessToken.email)
+                .password(String.valueOf(accessToken.user_id))
+                .location(oAuthUser.getLocation())
+                .images(new ArrayList<>())
+                .build();
+
+        user.getImages().add(image);
+
+        user = userService.addUser(user);
+        request.getSession().setAttribute("userModel", user);
+
+        redirectAttributes.addFlashAttribute("message",
+                "Successfully registered. Login:'" + user.getEmail() + "' Password'" + user.getPassword() + "'. Now you can login!");
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
     }
 }
