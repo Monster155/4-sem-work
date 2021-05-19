@@ -4,9 +4,22 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="f" %>
 <html>
 <head>
-    <title>Something went wrong</title>
+    <title>Any</title>
+    <link href="/css/error/not-ready.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-any
+<img src="${s:mvcUrl("DC#loadImage").arg(0, "background").build()}" class="background-image">
+<div class="content">
+    <div class="message">
+        <div class="text">
+            Небольшие технические шоколадки
+        </div>
+    </div>
+    <a href="/" class="homepage">
+        <div class="homepage-text">
+            To Home Page
+        </div>
+    </a>
+</div>
 </body>
 </html>

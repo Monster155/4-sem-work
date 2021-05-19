@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.itlab.sem.APIs.vk.AccessToken;
 import ru.itlab.sem.APIs.vk.OAuthUser;
 import ru.itlab.sem.APIs.vk.VKontakteAPI;
+import ru.itlab.sem.dto.userDTO.OAuthConDTO;
 import ru.itlab.sem.dto.userDTO.UserRegConDTO;
 import ru.itlab.sem.dto.userDTO.UserRegDTO;
 import ru.itlab.sem.models.Image;
@@ -189,7 +190,8 @@ public class AuthController {
 
     @RequestMapping("/oauth")
     public String oAuthGet(RedirectAttributes redirectAttributes,
-                           @RequestParam("code") String code) {
+                           @RequestParam("code") String code,
+                           ModelMap map) {
         request.getSession().setAttribute("VKCode", code);
         System.out.println(code);
         StringBuilder sb = new StringBuilder();
@@ -258,11 +260,32 @@ public class AuthController {
 
         user.getImages().add(image);
 
-        user = userService.addUser(user);
         request.getSession().setAttribute("userModel", user);
 
+        map.put("user", new OAuthConDTO());
+        return "oAuth_c";
+    }
+
+    @RequestMapping("/oAuth_c")
+    public String oAuthCon(RedirectAttributes redirectAttributes,
+                           @Valid @ModelAttribute OAuthConDTO oAuthConDTO,
+                           BindingResult result,
+                           ModelMap map) {
+
+        if (result.hasErrors()) {
+            System.out.println("failed");
+            return "reg_c";
+        }
+        String password = oAuthConDTO.getPassword();
+        oAuthConDTO.setPassword(passwordEncoder.encode(oAuthConDTO.getPassword()));
+
+        User user = (User) request.getSession().getAttribute("userModel");
+        modelMapper.map(oAuthConDTO, user);
+
+        user = userService.addUser(user);
+
         redirectAttributes.addFlashAttribute("message",
-                "Successfully registered. Login:'" + user.getEmail() + "' Password'" + user.getPassword() + "'. Now you can login!");
+                "Successfully registered. Login:'" + user.getEmail() + "' Password'" + password + "'. Now you can login!");
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
     }
 }

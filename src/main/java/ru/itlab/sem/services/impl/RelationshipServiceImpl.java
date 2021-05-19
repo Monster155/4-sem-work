@@ -11,37 +11,39 @@ public class RelationshipServiceImpl implements RelationshipService {
     @Autowired
     private RelationshipRepo repo;
 
-    @Override
-    public Relationship add(Long user_id, Long other_id) {
-        if (user_id.equals(other_id)) return Relationship.youOwn;
+    //                     _________________________________
+    // TODO make better - | User 1 | User 2 | Relationship |
+    //                    ---------------------------------
 
-        if (repo.findFollower(user_id, other_id) != null) {
-            return Relationship.heFollower;
+    @Override
+    public Relationship add(Long user_id, Long follower_id) {
+        if (repo.findFollower(user_id, follower_id) != null) {
+            return Relationship.otherFollower;
         } else {
-            if (repo.findFollower(other_id, user_id) != null) {
-                repo.removeFollower(other_id, user_id);
-                repo.addFriend(user_id, other_id);
-                repo.addFriend(other_id, user_id);
+            if (repo.findFollower(follower_id, user_id) != null) {
+                repo.removeFollower(follower_id, user_id);
+                repo.addFriend(user_id, follower_id);
+                repo.addFriend(follower_id, user_id);
                 return Relationship.friends;
             } else {
-                repo.addFollower(user_id, other_id);
-                return Relationship.heFollower;
+                repo.addFollower(user_id, follower_id);
+                return Relationship.otherFollower;
             }
         }
     }
 
     @Override
-    public Relationship remove(Long user_id, Long other_id) {
-        if (user_id.equals(other_id)) return Relationship.youOwn;
+    public Relationship remove(Long user_id, Long follower_id) {
+        if (user_id.equals(follower_id)) return Relationship.youOwn;
 
-        if (repo.findFriend(user_id, other_id) != null) {
-            repo.removeFriend(user_id, other_id);
-            repo.removeFriend(other_id, user_id);
-            repo.addFollower(user_id, other_id);
-            return Relationship.heFollower;
+        if (repo.findFriend(user_id, follower_id) != null) {
+            repo.removeFriend(user_id, follower_id);
+            repo.removeFriend(follower_id, user_id);
+            repo.addFollower(user_id, follower_id);
+            return Relationship.otherFollower;
         } else {
-            if (repo.findFollower(other_id, user_id) != null) {
-                repo.removeFollower(other_id, user_id);
+            if (repo.findFollower(follower_id, user_id) != null) {
+                repo.removeFollower(follower_id, user_id);
                 return Relationship.none;
             } else {
                 return Relationship.none;
@@ -50,17 +52,34 @@ public class RelationshipServiceImpl implements RelationshipService {
     }
 
     @Override
-    public Relationship find(Long user_id, Long other_id) {
-        if (user_id.equals(other_id)) return Relationship.youOwn;
+    public Relationship find(Long user_id, Long follower_id) {
+        if (user_id.equals(follower_id)) return Relationship.youOwn;
 
-        if (repo.findFriend(user_id, other_id) != null) {
+        if (repo.findFriend(user_id, follower_id) != null) {
             return Relationship.friends;
-        } else if (repo.findFollower(user_id, other_id) != null) {
-            return Relationship.heFollower;
-        } else if (repo.findFollower(other_id, user_id) != null) {
-            return Relationship.youFollowed;
+        } else if (repo.findFollower(user_id, follower_id) != null) {
+            return Relationship.otherFollower;
+        } else if (repo.findFollower(follower_id, user_id) != null) {
+            return Relationship.userFollower;
         } else {
             return Relationship.none;
         }
+    }
+
+    @Override
+    public Relationship change(Long user_id, Long follower_id) {
+        if (user_id.equals(follower_id)) return Relationship.youOwn;
+
+        Relationship rel = find(user_id, follower_id);
+        switch (rel) {
+            case none:
+            case otherFollower:
+                return add(follower_id, user_id);
+            case userFollower:
+                return remove(follower_id, user_id);
+            case friends:
+                return remove(user_id, follower_id);
+        }
+        return Relationship.none;
     }
 }

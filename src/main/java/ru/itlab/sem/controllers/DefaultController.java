@@ -57,25 +57,6 @@ public class DefaultController {
 
     @GetMapping("/")
     public String index() {
-        System.out.println(relService.find((long) 1, (long) 3));
-        System.out.println(relService.find((long) 3, (long) 1));
-
-        System.out.println(relService.add((long) 1, (long) 3));
-
-        System.out.println(relService.find((long) 1, (long) 3));
-        System.out.println(relService.find((long) 3, (long) 1));
-
-        System.out.println(relService.add((long) 3, (long) 1));
-
-        System.out.println(relService.find((long) 1, (long) 3));
-        System.out.println(relService.find((long) 3, (long) 1));
-
-        System.out.println(relService.remove((long) 1, (long) 3));
-
-        System.out.println(relService.find((long) 1, (long) 3));
-        System.out.println(relService.find((long) 3, (long) 1));
-//        relService.((long) 1, (long) 3);
-
         // if authorized - redirect messages
         // else - redirect login (user login everytime, but register only once)
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
@@ -100,6 +81,10 @@ public class DefaultController {
         UserProfileDTO profileDTO = modelMapper.map(user, UserProfileDTO.class);
         //add to Model Map
         map.put("profile", profileDTO);
+        //find relationship
+        RelationshipService.Relationship rel = relService.find(user.getId(), ((User) request.getSession().getAttribute("userModel")).getId());
+        map.put("rel", rel.name() + "");
+
         // post DTO - for creating new post
         PostDTO postDTO = PostDTO.builder()
                 .owner(modelMapper.map(user, User4PostDTO.class))
@@ -109,23 +94,65 @@ public class DefaultController {
         return "profile";
     }
 
-    @GetMapping("/{profile}/follow")
-    @ResponseBody
-    public String profileFollow(RedirectAttributes redirectAttributes,
-                                @PathVariable("profile") String profile,
+    @GetMapping("/follow")
+    public String profileFollow(@RequestParam("profile") String profile,
                                 ModelMap map) {
-        //get profile from DB
         System.out.println(profile);
         User followedUser = nicknameToUserConverter.convert(profile);
         if (followedUser == null) {
             throw new NullPointerException("User's profile not found");
         }
         System.out.println(followedUser);
-        //add to Model Map
+
         User user = (User) request.getSession().getAttribute("userModel");
 
-        //show
-        return "profile";
+        RelationshipService.Relationship rel = relService.find(user.getId(), followedUser.getId());
+        prepareMap(map, rel);
+
+        return "d_followBtn";
+    }
+
+    @GetMapping("/changeRel")
+    public String changeRelationship(@RequestParam("profile") String profile,
+                                     ModelMap map) {
+        System.out.println(profile);
+        User followedUser = nicknameToUserConverter.convert(profile);
+        if (followedUser == null) {
+            throw new NullPointerException("User's profile not found");
+        }
+        System.out.println(followedUser);
+
+        User user = (User) request.getSession().getAttribute("userModel");
+
+        RelationshipService.Relationship rel = relService.change(user.getId(), followedUser.getId());
+        prepareMap(map, rel);
+
+        return "d_followBtn";
+    }
+
+    private void prepareMap(ModelMap map, RelationshipService.Relationship rel) {
+        switch (rel) {
+            case none:
+                map.put("isOwn", false);
+                map.put("text", "Follow");
+                break;
+            case otherFollower:
+                map.put("isOwn", false);
+                map.put("text", "Add Friend");
+                break;
+            case userFollower:
+                map.put("isOwn", false);
+                map.put("text", "Unfollow");
+                break;
+            case friends:
+                map.put("isOwn", false);
+                map.put("text", "Remove Friend");
+                break;
+            case youOwn:
+                map.put("isOwn", true);
+                map.put("text", "Own");
+                break;
+        }
     }
 
     @GetMapping("/getProfile")

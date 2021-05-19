@@ -93,11 +93,45 @@
                         <div class="profile-friends-count">${profile.friendsCount}</div>
                         <div class="profile-friends-text">Friends</div>
                     </div>
-                    <button class="profile-follow-btn" onclick="follow(this)">
-                        <div class="profile-follow-btn-text">
-                            Follow
-                        </div>
-                    </button>
+                    <div id="profile-follow-btn"></div>
+
+                    <%--                    <c:choose>--%>
+                    <%--                        <c:when test="${rel == 'none'}">--%>
+                    <%--                            <button class="profile-follow-btn" onclick="follow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Follow--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'heFollower'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="follow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Add Friend--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'youFollowed'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Unfollow--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'friends'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Remove Friend--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'youOwn'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" style="background: #C4C4C4" disabled>--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Own--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                    </c:choose>--%>
                 </div>
             </div>
             <div class="profile-media">
@@ -239,17 +273,29 @@
     });
 </script>
 <script>
-    function follow(btn) {
+    $.ajax({
+        url: "${s:mvcUrl("DC#profileFollow").arg(0, profile.nickname).build()}",
+        method: 'GET',
+        cache: false,
+        type: "text/json",
+
+        success: function (res) {
+            console.log(res);
+            $("#profile-follow-btn").html(res);
+        },
+        error: function (res) {
+        }
+    })
+
+    function changeRel(btn) {
         $.ajax({
-            url: "${s:mvcUrl("PC#loadAllPosts").arg(0, profile.nickname).arg(1, '4').build()}",
+            url: "${s:mvcUrl("DC#changeRelationship").arg(0, profile.nickname).build()}",
             method: 'GET',
             cache: false,
             type: "text/json",
 
             success: function (res) {
-
-                $(btn).prop('disabled', false);
-                $(btn).css({background: "#FFFFFF"});
+                $("#profile-follow-btn").html(res);
             },
             error: function (res) {
                 $(btn).prop('disabled', false);
@@ -260,9 +306,6 @@
                 $(btn).prop('disabled', true);
                 $(btn).css({background: "#C4C4C4"});
             })
-            .then(function () {
-
-            });
     }
 </script>
 <script>

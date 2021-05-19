@@ -2,16 +2,18 @@ package ru.itlab.sem.services;
 
 public interface RelationshipService {
 
-    Relationship add(Long user_id, Long follower_id);
+    Relationship add(Long user_id, Long other_id);
 
-    Relationship remove(Long user_id, Long follower_id);
+    Relationship remove(Long user_id, Long other_id);
 
-    Relationship find(Long user_id, Long follower_id);
+    Relationship find(Long user_id, Long other_id);
+
+    Relationship change(Long user_id, Long other_id);
 
     enum Relationship {
         none,
-        heFollower,
-        youFollowed,
+        otherFollower,
+        userFollower,
         friends,
         youOwn
     }
