@@ -5,8 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import ru.itlab.sem.converters.NameToImageConverter;
 import ru.itlab.sem.converters.NicknameToUserConverter;
 import ru.itlab.sem.dto.postDTO.PostAddDTO;
@@ -49,7 +53,7 @@ public class PostController {
     private HttpServletResponse response;
 
     @PostMapping("/add")
-    @ResponseBody
+//    @ResponseBody
     public String addPost(@RequestParam("images") MultipartFile[] multipartFile,
                           @ModelAttribute("post") PostAddDTO postAddDTO,
                           BindingResult result,
@@ -57,7 +61,7 @@ public class PostController {
 
         if (result.hasErrors()) {
             System.out.println(result.getAllErrors());
-            return "post errors";
+            return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#getOwnProfile").build();
         }
 
         ArrayList<Image> images = new ArrayList<>();
@@ -73,7 +77,8 @@ public class PostController {
 
         post = postService.addPost(post);
         System.out.println(post);
-        return "done";
+
+        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#getOwnProfile").build();
     }
 
     @RequestMapping("/get")

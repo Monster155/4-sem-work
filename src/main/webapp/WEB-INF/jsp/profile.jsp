@@ -94,7 +94,7 @@
                         <div class="profile-friends-text">Friends</div>
                     </div>
                     <div id="profile-follow-btn"></div>
-
+                    <%-- TODO сделай заново весь этот Relationship - и кнопки, и храниние в БД --%>
                     <%--                    <c:choose>--%>
                     <%--                        <c:when test="${rel == 'none'}">--%>
                     <%--                            <button class="profile-follow-btn" onclick="follow(this)">--%>
