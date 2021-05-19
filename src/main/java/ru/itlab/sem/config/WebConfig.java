@@ -1,5 +1,6 @@
 package ru.itlab.sem.config;
 
+import com.google.gson.Gson;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -66,6 +67,11 @@ public class WebConfig implements WebMvcConfigurer {
         localeResolver.setCookieName("lang");
         localeResolver.setDefaultLocale(Locale.US);
         return localeResolver;
+    }
+
+    @Bean
+    public Gson gson() {
+        return new Gson();
     }
 
     @Bean

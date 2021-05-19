@@ -18,17 +18,23 @@
             modelAttribute="user" enctype="multipart/form-data">
         <div class="form-head hor">
             <h2 class="form-heading">Registration</h2>
-            <a href="/" class="form-logout">Log Out</a>
+            <a href="/" class="form-logout-div">
+                <div class="form-logout">Log Out</div>
+            </a>
         </div>
-        <div class="hor">
+        <div class="hor form-content">
                 <%--<f:label class="form-label" path="photo">&lt;%&ndash;<s:message code="photo"/>&ndash;%&gt;Photo</f:label>--%>
                 <%--<f:input path="photo" type="file" accept="image/*" capture="true"/>--%>
                 <%--image/png, image/jpeg--%>
                 <%--<f:errors path="photo"/>--%>
-            <label class="form-label">Photo</label>
-            <input class="photo" id="photo" name="photo" type="file" accept="image/png, image/jpeg" capture>
+            <div class="form-photo">
+                <label class="form-label">Photo</label>
+                <div class="photo-div" id="photo-div"></div>
+                <input class="photo" id="photo" name="photo" type="file"
+                       accept="image/png, image/jpeg" capture hidden>
+            </div>
 
-            <div class="ver">
+            <div class="ver text">
                 <f:label class="form-label" path="name"><%--TODO<s:message code="name"/>--%>Name</f:label>
                 <f:input path="name" type="text"/>
                 <f:errors path="name"/>
@@ -44,15 +50,30 @@
             </div>
             <br>
         </div>
-        <div>
-            Много тексте, который почти никто не читает, а тех, кто читает, нужно отправлять в дурку как можно скорее
-            Много тексте, который почти никто не читает, а тех, кто читает, нужно отправлять в дурку как можно скорее
-            Много тексте, который почти никто не читает, а тех, кто читает, нужно отправлять в дурку как можно скорее
+        <div class="info">
+            Много текста, который никто не читает,
+            Много текста, который никто не читает,
+            Много текста, который никто не читает,
+            Много текста, который никто не читает,
+            Много текста, который никто не читает,
+            Много текста, который никто не читает,
         </div>
-        <div>
+        <div class="btn-div">
             <button class="btn" type="submit"><%--<s:message code="reg.submit-button"/>--%>Sign Up</button>
         </div>
     </f:form>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $("#photo-div").click(function () {
+        $("#photo").click();
+    });
+
+    $("#photo").change(function (ev) {
+        if (this.files && this.files[0]) {
+            $("#photo-div").css({background: "no-repeat center/cover url(" + window.URL.createObjectURL(this.files[0]) + ")"});
+        }
+    });
+</script>
 </body>
 </html>

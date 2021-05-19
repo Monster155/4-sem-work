@@ -53,10 +53,12 @@ public class User implements UserDetails {
 
     @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ToString.Exclude
     private List<User> followers;
 
     @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @ToString.Exclude
     private List<User> friends;
 
     @OneToMany(fetch = FetchType.LAZY)

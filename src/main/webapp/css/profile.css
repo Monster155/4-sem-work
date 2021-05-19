@@ -419,6 +419,7 @@
 .profile-media-photo-small-image {
     width: 8vw;
     height: 8vw;
+    object-fit: cover;
     border-radius: 1vw;
 }
 

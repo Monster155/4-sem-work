@@ -9,8 +9,10 @@ import ru.itlab.sem.models.Image;
 import ru.itlab.sem.repositories.ImageRepo;
 import ru.itlab.sem.services.ImageService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.List;
 
 @Service
@@ -33,6 +35,23 @@ public class ImageServiceImpl implements ImageService {
         if (img.length <= 0)
             return null;
         return imageRepo.saveAndFlush(new Image(0, name, img));
+    }
+
+    @Override
+    public Image addImage(URI uri, String name) {
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+        try (InputStream inputStream = uri.toURL().openStream()) {
+            int n = 0;
+            byte[] buffer = new byte[1024];
+            while (-1 != (n = inputStream.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            log.info(e.getMessage());
+        }
+
+        return imageRepo.saveAndFlush(new Image(0, name, output.toByteArray()));
     }
 
     @Override

@@ -16,46 +16,48 @@
     </div>
     <div class="main" id="main">
         <div class="posts-container">
-            <div class="post-new">
-                <div class="post-new-profile-photo">
-                    <img src="data: image/png; base64, ${profile.photo.photo}"
-                         class="post-new-profile-photo-element">
-                </div>
-                <f:form class="post-form hor" method="post" enctype="multipart/form-data"
-                        action='${s:mvcUrl("PC#addPost").build()}' modelAttribute="post">
-                    <label class="post-new-text">
-                        <f:input path="text" class="post-new-text-input" placeholder="What's new..."/>
-                    </label>
-                    <div class="ver" style="align-items: center;">
-                        <div class="hor">
-                            <div>
-                                <button class="post-new-add-photo post-new-add-logo" id="post-new-add-photo"
-                                        type="button">
-                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
-                                         class="post-new-add-logo-image" id="post-new-add-photos-image">
-                                </button>
-                                <input id="images" name="images" type="file" accept="image/png, image/jpeg"
-                                       multiple capture hidden/>
-                            </div>
-                            <div class="post-new-add-video post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                            <div class="post-new-add-music post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                            <div class="post-new-add-wyswig post-new-add-logo">
-                                <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
-                                     class="post-new-add-logo-image">
-                            </div>
-                        </div>
-                        <button class="post-new-add-btn" id="post-new-add-btn" type="submit" hidden>
-                            Post
-                        </button>
+            <c:if test="${profile.id == sessionScope.userModel.id}">
+                <div class="post-new">
+                    <div class="post-new-profile-photo">
+                        <img src="data: image/png; base64, ${profile.photo.photo}"
+                             class="post-new-profile-photo-element">
                     </div>
-                </f:form>
-            </div>
+                    <f:form class="post-form hor" method="post" enctype="multipart/form-data"
+                            action='${s:mvcUrl("PC#addPost").build()}' modelAttribute="post">
+                        <label class="post-new-text">
+                            <f:input path="text" class="post-new-text-input" placeholder="What's new..."/>
+                        </label>
+                        <div class="ver" style="align-items: center;">
+                            <div class="hor">
+                                <div>
+                                    <button class="post-new-add-photo post-new-add-logo" id="post-new-add-photo"
+                                            type="button">
+                                        <img src="${s:mvcUrl("DC#loadImage").arg(0, "photo_icon").build()}"
+                                             class="post-new-add-logo-image" id="post-new-add-photos-image">
+                                    </button>
+                                    <input id="images" name="images" type="file" accept="image/png, image/jpeg"
+                                           multiple capture hidden/>
+                                </div>
+                                <div class="post-new-add-video post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "video_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                                <div class="post-new-add-music post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "music_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                                <div class="post-new-add-wyswig post-new-add-logo">
+                                    <img src="${s:mvcUrl("DC#loadImage").arg(0, "wyswig_icon").build()}"
+                                         class="post-new-add-logo-image">
+                                </div>
+                            </div>
+                            <button class="post-new-add-btn" id="post-new-add-btn" type="submit" hidden>
+                                Post
+                            </button>
+                        </div>
+                    </f:form>
+                </div>
+            </c:if>
             <div class="post-search">
                 <div class="post-search-logo">
                     <img src="${s:mvcUrl("DC#loadImage").arg(0, "search_icon").build()}"
@@ -91,11 +93,45 @@
                         <div class="profile-friends-count">${profile.friendsCount}</div>
                         <div class="profile-friends-text">Friends</div>
                     </div>
-                    <div class="profile-follow-btn">
-                        <div class="profile-follow-btn-text">
-                            Follow
-                        </div>
-                    </div>
+                    <div id="profile-follow-btn"></div>
+                    <%-- TODO сделай заново весь этот Relationship - и кнопки, и храниние в БД --%>
+                    <%--                    <c:choose>--%>
+                    <%--                        <c:when test="${rel == 'none'}">--%>
+                    <%--                            <button class="profile-follow-btn" onclick="follow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Follow--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'heFollower'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="follow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Add Friend--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'youFollowed'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Unfollow--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'friends'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Remove Friend--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                        <c:when test="${rel == 'youOwn'}">--%>
+                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" style="background: #C4C4C4" disabled>--%>
+                    <%--                                <div class="profile-follow-btn-text">--%>
+                    <%--                                    Own--%>
+                    <%--                                </div>--%>
+                    <%--                            </button>--%>
+                    <%--                        </c:when>--%>
+                    <%--                    </c:choose>--%>
                 </div>
             </div>
             <div class="profile-media">
@@ -235,6 +271,42 @@
         $("#post-new-add-btn").show();
         $(".post-new").css({height: '12vh'});
     });
+</script>
+<script>
+    $.ajax({
+        url: "${s:mvcUrl("DC#profileFollow").arg(0, profile.nickname).build()}",
+        method: 'GET',
+        cache: false,
+        type: "text/json",
+
+        success: function (res) {
+            console.log(res);
+            $("#profile-follow-btn").html(res);
+        },
+        error: function (res) {
+        }
+    })
+
+    function changeRel(btn) {
+        $.ajax({
+            url: "${s:mvcUrl("DC#changeRelationship").arg(0, profile.nickname).build()}",
+            method: 'GET',
+            cache: false,
+            type: "text/json",
+
+            success: function (res) {
+                $("#profile-follow-btn").html(res);
+            },
+            error: function (res) {
+                $(btn).prop('disabled', false);
+                $(btn).css({background: "#FFFFFF"});
+            }
+        })
+            .always(function () {
+                $(btn).prop('disabled', true);
+                $(btn).css({background: "#C4C4C4"});
+            })
+    }
 </script>
 <script>
 
