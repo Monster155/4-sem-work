@@ -21,6 +21,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Post updatePost(Post post) {
+        return postRepo.updatePost(post.getText(), post.getId());
+    }
+
+    @Override
+    public Post deletePost(Long id) {
+        return postRepo.deletePostById(id);
+    }
+
+    @Override
     public Post getPostById(Long id) {
         return postRepo.findById(id).orElse(null);
     }

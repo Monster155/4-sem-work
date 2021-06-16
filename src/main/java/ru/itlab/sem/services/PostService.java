@@ -8,7 +8,11 @@ public interface PostService {
 
    Post addPost(Post post);
 
-   Post getPostById(Long id);
+    Post updatePost(Post post);
+
+    Post deletePost(Long id);
+
+    Post getPostById(Long id);
 
    List<Post> getAll();
 

@@ -3,15 +3,13 @@ package ru.itlab.sem.dto.userDTO;
 import lombok.*;
 import ru.itlab.sem.dto.ImageDTO;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @EqualsAndHashCode
 @ToString
-public class UserProfileDTO {
+public class UserApiDTO {
     private long id;
     private ImageDTO photo;
     private String name;
@@ -19,7 +17,6 @@ public class UserProfileDTO {
     private String fullname;
     private String nickname;
     private String location;
-    private List<ImageDTO> images;
-    private long followersCount;
-    private long friendsCount;
+    private int followersCount;
+    private int friendsCount;
 }

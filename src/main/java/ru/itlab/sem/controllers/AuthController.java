@@ -83,14 +83,14 @@ public class AuthController {
     @RequestMapping("/in/suc")
     public String loginPost(@ModelAttribute User user) {
         user = userService.findUserByEmail(user.getEmail());
-        System.out.println(user);
+        log.info(user.toString());
         request.getSession().setAttribute("userModel", user);
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#messages").build();
     }
 
     @GetMapping("/in/failed")
     public String loginFailed(RedirectAttributes redirectAttributes) {
-        System.out.println("Login failed");
+        log.info("Login failed");
         redirectAttributes.addFlashAttribute("message", msa.getMessage("login.notfound"));
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
     }
@@ -107,18 +107,18 @@ public class AuthController {
                           @Valid @ModelAttribute("userUp") UserRegDTO userRegDTO,
                           BindingResult result,
                           ModelMap map) {
-        System.out.println(userRegDTO);
+        log.info(userRegDTO.toString());
         if (result.hasErrors()) {
-            System.out.println("failed");
+            log.info("failed");
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userUp", result);
             redirectAttributes.addFlashAttribute("userUp", userRegDTO);
             return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#join").build();
         }
-        System.out.println("passed");
+        log.info("passed");
 
         if (userService.findUserByEmail(userRegDTO.getEmail()) == null) {
             User user = modelMapper.map(userRegDTO, User.class);
-            System.out.println(user);
+            log.info(user.toString());
 
             user.setNickname(user.getNickname().toLowerCase());
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -151,22 +151,22 @@ public class AuthController {
                            BindingResult result,
                            ModelMap map) {
         if (result.hasErrors()) {
-            System.out.println("failed");
+            log.info("failed");
             return "reg_c";
         }
 
         Image image = imageService.addImage(multipartFile, null);
-        System.out.println(image);
+        log.info(image.toString());
 
         User user = (User) request.getSession().getAttribute("userModel");
-        System.out.println(user);
-        System.out.println(userRegConDTO);
+        log.info(user.toString());
+        log.info(userRegConDTO.toString());
 
         user.setPhoto(image);
         user.setImages(new ArrayList<>());
         user.getImages().add(image);
         modelMapper.map(userRegConDTO, user);
-        System.out.println(user);
+        log.info(user.toString());
 
         user = userService.addUser(user);
         request.getSession().setAttribute("userModel", user);
@@ -183,7 +183,7 @@ public class AuthController {
 ////        Authentication authenticatedUser = authenticationManager.authenticate(token);
 ////        SecurityContextHolder.getContext().setAuthentication(authenticatedUser);
 //        SecurityContextHolder.getContext().setAuthentication(token);
-//
+//TODO Provider
 //        redirectAttributes.addFlashAttribute("user", user);
 //        return "redirect:" + MvcUriComponentsBuilder.fromMappingName("AC#loginPost").build();
     }
@@ -193,7 +193,7 @@ public class AuthController {
                            @RequestParam("code") String code,
                            ModelMap map) {
         request.getSession().setAttribute("VKCode", code);
-        System.out.println(code);
+        log.info(code);
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -210,7 +210,7 @@ public class AuthController {
             e.printStackTrace();
         }
 
-        System.out.println(sb.toString());
+        log.info(sb.toString());
 
         AccessToken accessToken = g.fromJson(sb.toString(), AccessToken.class);
         request.getSession().setAttribute("accessToken", accessToken);
@@ -235,17 +235,17 @@ public class AuthController {
             e.printStackTrace();
         }
 
-        System.out.println(sb.toString());
+        log.info(sb.toString());
 
         int z = "{\"response\":[".length();
         OAuthUser oAuthUser = g.fromJson(sb.substring(z, sb.length() - 2), OAuthUser.class);
 //        oAuthUser.email = accessToken.email;
 
-        System.out.println(oAuthUser);
+        log.info(oAuthUser.toString());
 
         // register user
         Image image = imageService.addImage(oAuthUser.getPhoto_big(), null);
-        System.out.println(image);
+        log.info(image.toString());
 
         User user = User.builder()
                 .photo(image)
@@ -273,7 +273,7 @@ public class AuthController {
                            ModelMap map) {
 
         if (result.hasErrors()) {
-            System.out.println("failed");
+            log.info("failed");
             return "reg_c";
         }
         String password = oAuthConDTO.getPassword();

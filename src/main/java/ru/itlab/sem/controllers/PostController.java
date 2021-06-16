@@ -1,14 +1,12 @@
 package ru.itlab.sem.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import ru.itlab.sem.converters.NameToImageConverter;
@@ -30,6 +28,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/post")
+@Slf4j
 public class PostController {
 
     @Autowired
@@ -60,7 +59,7 @@ public class PostController {
                           ModelMap map) {
 
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
+            log.info(result.getAllErrors().toString());
             return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#getOwnProfile").build();
         }
 
@@ -68,7 +67,7 @@ public class PostController {
         for (MultipartFile mFile : multipartFile) {
             Image image = imageService.addImage(mFile, null);
             images.add(image);
-            System.out.println(image);
+            log.info(image.toString());
         }
 
         Post post = modelMapper.map(postAddDTO, Post.class);
@@ -76,7 +75,7 @@ public class PostController {
         post.setImages(images);
 
         post = postService.addPost(post);
-        System.out.println(post);
+        log.info(post.toString());
 
         return "redirect:" + MvcUriComponentsBuilder.fromMappingName("DC#getOwnProfile").build();
     }
@@ -85,7 +84,7 @@ public class PostController {
     public String loadPost(@RequestParam("id") Long id,
                            ModelMap map) {
         Post post = postService.getPostById(id);
-        System.out.println(post);
+        log.info(post.toString());
         PostDTO postDTO = modelMapper.map(post, PostDTO.class);
 
         ArrayList<PostDTO> posts = new ArrayList<>();
@@ -95,14 +94,36 @@ public class PostController {
         return "d_post";
     }
 
+    @RequestMapping("/delete")
+    @ResponseBody
+    public Boolean deletePost(@RequestParam("id") Long id,
+                             ModelMap map) {
+
+        postService.deletePost(id);
+
+        return true;
+    }
+
+    @RequestMapping("/update")
+    public String updatePost(@ModelAttribute Post post,
+                             ModelMap map) {
+        log.info(post.toString());
+        post = postService.updatePost(post);
+        PostDTO postDTO = modelMapper.map(post, PostDTO.class);
+
+        map.put("post", postDTO);
+
+        return "d_post";
+    }
+
     @RequestMapping("/getAll")
     public String loadAllPosts(@RequestParam("userid") String id,
                                @RequestParam("count") String count,
                                ModelMap map) {
 
-        System.out.println(id + " " + count);
+        log.info(id + " " + count);
         User user = nicknameToUserConverter.convert(id);
-        System.out.println(user);
+        log.info(user.toString());
         if (user == null) {
             return "d_post";
         }

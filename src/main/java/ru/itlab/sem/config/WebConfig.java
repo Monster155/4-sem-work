@@ -92,8 +92,8 @@ public class WebConfig implements WebMvcConfigurer {
                                 user.getImages().stream()
                                         .map(image -> modelMapper.map(image, ImageDTO.class))
                                         .collect(Collectors.toList()))
-                        .followersCount(user.getFollowers().size())
-                        .friendsCount(user.getFriends().size())
+                        .followersCount(user.getFollowersCount())
+                        .friendsCount(user.getFriendsCount())
                         .build();
             }
         });

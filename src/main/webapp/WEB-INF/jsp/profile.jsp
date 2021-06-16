@@ -94,44 +94,6 @@
                         <div class="profile-friends-text">Friends</div>
                     </div>
                     <div id="profile-follow-btn"></div>
-                    <%-- TODO сделай заново весь этот Relationship - и кнопки, и храниние в БД --%>
-                    <%--                    <c:choose>--%>
-                    <%--                        <c:when test="${rel == 'none'}">--%>
-                    <%--                            <button class="profile-follow-btn" onclick="follow(this)">--%>
-                    <%--                                <div class="profile-follow-btn-text">--%>
-                    <%--                                    Follow--%>
-                    <%--                                </div>--%>
-                    <%--                            </button>--%>
-                    <%--                        </c:when>--%>
-                    <%--                        <c:when test="${rel == 'heFollower'}">--%>
-                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="follow(this)">--%>
-                    <%--                                <div class="profile-follow-btn-text">--%>
-                    <%--                                    Add Friend--%>
-                    <%--                                </div>--%>
-                    <%--                            </button>--%>
-                    <%--                        </c:when>--%>
-                    <%--                        <c:when test="${rel == 'youFollowed'}">--%>
-                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
-                    <%--                                <div class="profile-follow-btn-text">--%>
-                    <%--                                    Unfollow--%>
-                    <%--                                </div>--%>
-                    <%--                            </button>--%>
-                    <%--                        </c:when>--%>
-                    <%--                        <c:when test="${rel == 'friends'}">--%>
-                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" onclick="unfollow(this)">--%>
-                    <%--                                <div class="profile-follow-btn-text">--%>
-                    <%--                                    Remove Friend--%>
-                    <%--                                </div>--%>
-                    <%--                            </button>--%>
-                    <%--                        </c:when>--%>
-                    <%--                        <c:when test="${rel == 'youOwn'}">--%>
-                    <%--                            <button class="profile-follow-btn" id="profile-follow-btn" style="background: #C4C4C4" disabled>--%>
-                    <%--                                <div class="profile-follow-btn-text">--%>
-                    <%--                                    Own--%>
-                    <%--                                </div>--%>
-                    <%--                            </button>--%>
-                    <%--                        </c:when>--%>
-                    <%--                    </c:choose>--%>
                 </div>
             </div>
             <div class="profile-media">

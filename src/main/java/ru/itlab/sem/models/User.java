@@ -54,12 +54,7 @@ public class User implements UserDetails {
     @OneToMany(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id", referencedColumnName = "id")
     @ToString.Exclude
-    private List<User> followers;
-
-    @OneToMany(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @ToString.Exclude
-    private List<User> friends;
+    private List<Relationship> relations;
 
     @OneToMany(fetch = FetchType.LAZY)
     @ToString.Exclude
@@ -104,5 +99,16 @@ public class User implements UserDetails {
 
     public String getFullName() {
         return getName() + " " + getSurname();
+    }
+
+    public long getFollowersCount() {
+        return relations.stream()
+                .filter(c -> c.getRelation().equals(Relationship.Relations.SECOND_FOLLOWER_OF_FIRST))
+                .count();
+    }
+    public long getFriendsCount() {
+        return relations.stream()
+                .filter(c -> c.getRelation().equals(Relationship.Relations.FRIENDS))
+                .count();
     }
 }
